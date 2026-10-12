@@ -1,0 +1,113 @@
+
+ / {
+     zephyr,user {
+         io-channels = <&adc 0>;
+     };
+
+     aliases {
+         /* LED aliases */
+         heartbeat = &led0;   /* LED1 (GPIO) */
+         batteryled = &pwmch1;    /* LED2  controlled by PWM child*/
+         ecgled = &led2;      /* LED3  */
+         error = &led3;       /* LED4 */
+
+         /* Buttons */
+         idlereturn = &button0;   /* SW1 */
+         tempread = &button1;  /* SW2 */
+         ecgread = &button2;/* SW3 */
+         reset = &button3;   /* SW4 */
+
+         /* ADC */
+         vadc = &vadc;
+         vadcdiff = &vadcdiff;
+
+         /* PWM child aliases */
+         pwm1 = &pwmch1;
+        
+     };
+ };
+
+/* ADC channels */
+&adc {
+    #io-channel-cells = <1>;
+    #address-cells = <1>;
+    #size-cells = <0>;
+/*single-ended channel for battery voltage */
+    vadc: channel@0 {
+        reg = <0>; /* channel number */
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,gain = "ADC_GAIN_1_5";
+        zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+        zephyr,input-positive = <NRF_SAADC_AIN0>; /* P0.02 */
+        zephyr,resolution = <12>;
+    };
+/*differential channel for ECG signal */
+    vadcdiff: channel@1 {
+        reg = <1>;
+        zephyr,reference = "ADC_REF_INTERNAL";
+        zephyr,gain = "ADC_GAIN_1_4";
+        zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_MICROSECONDS, 40)>;
+        zephyr,input-positive = <NRF_SAADC_AIN1>; /*P0.03 */
+        zephyr,input-negative = <NRF_SAADC_AIN2>;/*P0.04 */
+        zephyr,resolution = <12>;
+        zephyr,differential;
+    };
+
+    status = "okay";
+};
+
+/* pwm-leds container */
+/ {
+    pwm_leds {
+        compatible = "pwm-leds";
+
+        pwmch1: pwm_1 {
+            /* &pwm0, channel 0, period 1ms (1,000,000 ns), inverted polarity for active-low LED */
+            pwms = <&pwm0 0 1000000 PWM_POLARITY_INVERTED>;
+            label = "PWM_CH1";
+        };
+    };
+};
+
+/* Ensure pwm0 controller is enabled and pinned */
+&pwm0 {
+    compatible = "nordic,nrf-pwm";
+    reg = <0x4001c000 0x1000>;
+    interrupts = <28 NRF_DEFAULT_IRQ_PRIORITY>;
+    status = "okay";
+    #pwm-cells = <3>;
+    pinctrl-0 = <&pwm0_default>;
+    pinctrl-1 = <&pwm0_sleep>;
+    pinctrl-names = "default", "sleep";
+};
+
+/* pinctrl mappings for pwm0 outputs */
+&pinctrl {
+    compatible = "nordic,nrf-pinctrl";
+    status = "okay";
+
+    pwm0_default: pwm0_default {
+        group1 {
+            /* Map PWM_OUT0 -> P0.28, */
+            psels = <NRF_PSEL(PWM_OUT0, 0, 14)>;
+        };
+    };
+
+    pwm0_sleep: pwm0_sleep {
+        group1 {
+            psels = <NRF_PSEL(PWM_OUT0, 0, 14)>;
+            low-power-enable;
+        };
+    };
+};
+
+/*I2C for temperature sensor */
+&i2c0 {
+
+    mcp9808@18{
+        compatible = "jedec,jc-42.4-temp";
+        reg = <0x18>;
+        status = "okay";
+    };
+
+};

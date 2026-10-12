@@ -1,0 +1,8 @@
+__pycache__/
+build*/
+.DS_Store
+.vscode/
+external/
+.conda/
+venv/
+.venv/

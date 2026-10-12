@@ -1,0 +1,6 @@
+Set HR,LOG_INF() Average HR (bpm),BLE Average HR (bpm),Scope Blink HR (bpm),Scope Blink Duty Cycle (%)
+40,40,40,39.96,25.33
+60,60,60,60,26
+120,121,121,120,24
+150,151,151,150,26
+180,180,180,181.8,24.4

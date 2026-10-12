@@ -1,0 +1,4 @@
+Location,Description,LOG_INF Measurement (Deg C),BLE Mesurement (Deg C)
+1,Bench in lab,25.94,26
+2,Bench in lab after breathing hot air for three seconds,27.25,27
+3,Bench in lab after breathing cold air for three seconds,23.44,23
