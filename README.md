@@ -24,19 +24,17 @@ Firmware for a wrist-worn health monitor prototype that measures heart rate from
 
 ## Repository layout
 
-```
-application/
-  src/main.c                         application: state machine, sensing, heart-rate detection
-  lib/ble-lib.c, include/ble-lib.h   BLE GATT service and Battery Service
-  boards/nrf52833dk_nrf52833.overlay devicetree aliases for LEDs, buttons, ADC, PWM, I2C
-  prj.conf                           Zephyr configuration
-  CMakeLists.txt, CMakePresets.json, west.yml   build configuration
-testing/
-  final_technical_report.ipynb       data analysis and verification report
-  final_ecg_data.csv, final_temp_data.csv, final_battery_data.csv
-  bme554.py, test_bme554.py, conftest.py   course-provided analysis helpers and tests
-state_diagram_ecg_final.png          state machine diagram
-```
+| Path | Contents |
+| --- | --- |
+| `application/src/main.c` | Application: state machine, sensing, heart-rate detection |
+| `application/lib/ble-lib.c`, `application/include/ble-lib.h` | BLE GATT service and Battery Service |
+| `application/boards/nrf52833dk_nrf52833.overlay` | Devicetree aliases for LEDs, buttons, ADC, PWM and I2C |
+| `application/prj.conf` | Zephyr configuration |
+| `application/CMakeLists.txt`, `CMakePresets.json`, `west.yml` | Build configuration |
+| `testing/final_technical_report.ipynb` | Data analysis and verification report |
+| `testing/final_*_data.csv` | Recorded ECG, temperature and battery data |
+| `testing/bme554.py`, `test_bme554.py`, `conftest.py` | Course-provided analysis helpers and tests |
+| `state_diagram_ecg_final.png` | State machine diagram |
 
 ## Authorship
 
